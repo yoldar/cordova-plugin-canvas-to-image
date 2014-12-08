@@ -24,7 +24,7 @@
             var canvas = (typeof canvasId === "string") ? document.getElementById(canvasId) : canvasId;
             var imageData = canvas.toDataURL().replace(/data:image\/png;base64,/,'');
             var extension='.png';
-            var destQuality=1.0;
+            var destQuality=100;
             if (fileExtension) extension=fileExtension.toLowerCase();
             try{
               if (quality) destQuality=parseFloat(quality);
