@@ -4,7 +4,7 @@ Canvas2ImagePlugin
 ============
 
 This plugin allows you to save the contents of an HTML canvas tag to the iOS Photo Library, Android Gallery or WindowsPhone 8 Photo Album from your app.
-On Android platforms you can change the format of the saved files (png/jpg).
+On Android platforms you can change the format of the saved files (png/jpg) and define the folder where to save the pictures .
 
 See an example project using it here: [https://github.com/devgeeks/Canvas2ImageDemo](https://github.com/devgeeks/Canvas2ImageDemo) - note: this app does not work in wp8.
 
@@ -57,6 +57,23 @@ function onDeviceReady()
         document.getElementById('myCanvas'),
         '.jpg',
         80
+    );
+}
+
+```javascript  ... format: jpg   ... quality 80% ... outputfolder : 'canvaspluginfolder'
+function onDeviceReady()
+{
+	window.canvas2ImagePlugin.saveImageDataToLibrary(
+        function(msg){
+            console.log(msg);  //msg is the filename path (for android and iOS)
+        },
+        function(err){
+            console.log(err);
+        },
+        document.getElementById('myCanvas'),
+        '.jpg',
+        80,
+        'cunvaspluginfolder'
     );
 }
 
