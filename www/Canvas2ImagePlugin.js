@@ -9,7 +9,7 @@
 
   module.exports = {
     
-    saveImageDataToLibrary:function(successCallback, failureCallback, canvasId,fileExtension,quality,picfolder) {
+    saveImageDataToLibrary:function(successCallback, failureCallback, canvasId,fileExtension,quality,picfolder,add2galery) {
         // successCallback required
         if (typeof successCallback != "function") {
             console.log("Canvas2ImagePlugin Error: successCallback is not a function");
@@ -30,7 +30,10 @@
               if (quality) destQuality=parseFloat(quality);
             } catch (e){}
             var params= [imageData,extension,destQuality];
-            if (picfolder) params= [imageData,extension,destQuality,picfolder];
+            if (picfolder) {
+              params=[imageData,extension,destQuality,picfolder];
+              if (add2galery) params.push(add2galery);
+            }
             return cordova.exec(successCallback, failureCallback, "Canvas2ImagePlugin","saveImageDataToLibrary",params);
         }
     }
