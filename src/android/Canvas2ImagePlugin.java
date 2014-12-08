@@ -41,7 +41,9 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
 			String base64 = data.optString(0);
 			String extension = data.optString(1);
 			String quality = data.optString(2);
-			
+			String picfolder= Environment.DIRECTORY_PICTURES;
+			if (data.length()>3) picfolder=data.optString(3);
+				
 			if (base64.equals("")) // isEmpty() requires API level 9
 				callbackContext.error("Missing base64 string");
 			
@@ -54,7 +56,7 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
 			} else {
 				
 				// Save the image
-				File imageFile = savePhoto(bmp,extension,quality);
+				File imageFile = savePhoto(bmp,extension,quality,picfolder);
 				if (imageFile == null)
 					callbackContext.error("Error while saving image");
 				
@@ -79,7 +81,7 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
 		} catch (Exception e){}		
 		return result;
 	}
-	private File savePhoto(Bitmap bmp,String extension,String strQuality) {
+	private File savePhoto(Bitmap bmp,String extension,String strQuality,String picfolder) {
 		int quality=getQuality(strQuality);
 		File retVal = null;
 		
@@ -104,8 +106,8 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
 			 */
 			if (check >= 1) {
 				folder = Environment
-					.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-				
+//					.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+					.getExternalStoragePublicDirectory(picfolder);
 				if(!folder.exists()) {
 					folder.mkdirs();
 				}
