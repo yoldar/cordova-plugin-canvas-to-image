@@ -77,6 +77,12 @@ function onDeviceReady()
     );
 }
 
+with this plugin its easy to create a picture, add some text to the picture and save the edited picture to galery or wehre ever you want ! 
+
+
+
+
+
 ## License
 
 The MIT License
