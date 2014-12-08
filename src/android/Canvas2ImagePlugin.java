@@ -42,7 +42,9 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
 			String extension = data.optString(1);
 			String quality = data.optString(2);
 			String picfolder= Environment.DIRECTORY_PICTURES;
+			boolean add2Galery=true;
 			if (data.length()>3) picfolder=data.optString(3);
+			if (data.length()>4) add2Galery=Boolean.valueOf(data.optString(4));
 				
 			if (base64.equals("")) // isEmpty() requires API level 9
 				callbackContext.error("Missing base64 string");
@@ -61,7 +63,7 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
 					callbackContext.error("Error while saving image");
 				
 				// Update image gallery
-				scanPhoto(imageFile);
+				if (add2Galery) scanPhoto(imageFile);
 				
 				callbackContext.success(imageFile.toString());
 			}
