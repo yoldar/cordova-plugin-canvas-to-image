@@ -30,7 +30,7 @@
               if (quality) destQuality=parseFloat(quality);
             } catch (e){}
             var params= [imageData,extension,destQuality];
-            if (picfolder) params= [imageData,extension,destQuality];
+            if (picfolder) params= [imageData,extension,destQuality,picfolder];
             return cordova.exec(successCallback, failureCallback, "Canvas2ImagePlugin","saveImageDataToLibrary",params);
         }
     }
