@@ -14,14 +14,16 @@
 
 
 @implementation Canvas2ImagePlugin
-@synthesize callbackId;
+@synthesize latestCommand;
 
 
--(void) saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath {
-    if ([[extension lowercaseString] isEqualToString:@"png"]) {
+-(void) saveImage:(UIImage *)image withFileName:(NSString *)imageName ofType:(NSString *)extension inDirectory:(NSString *)directoryPath and: (CGFloat) quality {
+    
+    if ( ([[extension lowercaseString] isEqualToString:@"png"]) || ([[extension lowercaseString] isEqualToString:@".png"]) ){
         [UIImagePNGRepresentation(image) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"png"]] options:NSAtomicWrite error:nil];
-    } else if ([[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
-        [UIImageJPEGRepresentation(image, 1.0) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
+    } else if ([[extension lowercaseString] isEqualToString:@".jpg"] || [[extension lowercaseString] isEqualToString:@".jpeg"]
+               || [[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
+        [UIImageJPEGRepresentation(image, quality) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
     } else {
         ALog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
     }
@@ -35,23 +37,29 @@
     [dateFormatter setDateFormat:@"yyyyMMddHHmmss"];
     NSString *dateString = [dateFormatter stringFromDate:date];
 
-    self.callbackId = command.callbackId;
+    self.latestCommand = command;
     NSData* imageData = [NSData dataFromBase64String:[command.arguments objectAtIndex:0]];
     
     UIImage* image = [[[UIImage alloc] initWithData:imageData] autorelease];
 
     NSString * path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *temp = @"ImageFile-";
-    NSString *ImageName = [temp stringByAppendingFormat:@"%d",dateString];
-    [self saveImage:image withFileName:ImageName ofType:@"png" inDirectory:path];
+    NSString *ImageName = [temp stringByAppendingFormat:@"%@",dateString];
+    NSString *extension = @"png";
+    extension = [command.arguments objectAtIndex:1];
+    CGFloat quality = 1.0;
+    quality = [[command.arguments objectAtIndex:2] floatValue] / 100;
+    
+    
+    [self saveImage:image withFileName:ImageName ofType:extension inDirectory:path and:quality];
+    
     NSString *tileDirectory = [[NSBundle mainBundle] resourcePath];
     NSString *documentFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSLog(@"Tile Directory: %@", tileDirectory);
     NSLog(@"Doc Directory: %@", documentFolderPath);
     UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
-    CDVPluginResult* result = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"%@/%@.png", documentFolderPath, ImageName]];
-    [self.webView stringByEvaluatingJavaScriptFromString:[result toSuccessCallbackString: self.callbackId]];
-
+    CDVPluginResult* result = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"%@/%@%@", documentFolderPath, ImageName, extension]];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo
@@ -62,14 +70,14 @@
         // Show error message...
         NSLog(@"ERROR: %@",error);
         CDVPluginResult* result = [CDVPluginResult resultWithStatus: CDVCommandStatus_ERROR messageAsString:error.description];
-        [self.webView stringByEvaluatingJavaScriptFromString:[result toErrorCallbackString: self.callbackId]];
+        [self.commandDelegate sendPluginResult:result callbackId: self.latestCommand.callbackId];
     }
     else  // No errors
     {
         // Show message image successfully saved
         NSLog(@"IMAGE SAVED!");
         CDVPluginResult* result = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsString:@"Image saved"];
-        [self.webView stringByEvaluatingJavaScriptFromString:[result toSuccessCallbackString: self.callbackId]];
+        [self.commandDelegate sendPluginResult:result callbackId:self.latestCommand.callbackId];
     }
 }
 
