@@ -17,7 +17,7 @@
         else if (typeof failureCallback != "function") {
             console.log("Canvas2ImagePlugin Error: failureCallback is not a function");
         }
-        else if ((fileExtension) && ((fileExtension.toLowerCase() != '.jpg') && (fileExtension.toLowerCase != '.png'))) {
+        else if ((fileExtension) && ((fileExtension.toLowerCase() != '.jpg') && (fileExtension.toLowerCase() != '.png'))) {
             console.log("Canvas2ImagePlugin Error: fileExtension must be '.jpg' or '.png'");
         }
         else {
