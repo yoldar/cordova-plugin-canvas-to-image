@@ -25,7 +25,7 @@
                || [[extension lowercaseString] isEqualToString:@"jpg"] || [[extension lowercaseString] isEqualToString:@"jpeg"]) {
         [UIImageJPEGRepresentation(image, quality) writeToFile:[directoryPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", imageName, @"jpg"]] options:NSAtomicWrite error:nil];
     } else {
-        ALog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
+        NSLog(@"Image Save Failed\nExtension: (%@) is not recognized, use (PNG/JPG)", extension);
     }
 }
 
@@ -38,7 +38,8 @@
     NSString *dateString = [dateFormatter stringFromDate:date];
 
     self.latestCommand = command;
-    NSData* imageData = [NSData dataFromBase64String:[command.arguments objectAtIndex:0]];
+   // NSData* imageData = [NSData dataFromBase64String:[command.arguments objectAtIndex:0]];
+    NSData *imageData = [[NSData alloc] initWithBase64EncodedString:[command.arguments objectAtIndex:0] options:0];
     
     UIImage* image = [[[UIImage alloc] initWithData:imageData] autorelease];
 

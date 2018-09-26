@@ -1,0 +1,19 @@
+{
+  "name": "canvas2imageplugin",
+  "version": "0.7.2",
+  "description": "Canvas2ImagePlugin\r ============",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gurdaan/Canvas2ImagePlugin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gurdaan/Canvas2ImagePlugin/issues"
+  },
+  "homepage": "https://github.com/gurdaan/Canvas2ImagePlugin#readme"
+}
