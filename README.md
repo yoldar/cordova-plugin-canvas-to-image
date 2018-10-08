@@ -1,4 +1,4 @@
-### Fork Note:  This uses some minor modifications of my own combined with the work of Tommy-Carlos Williams and ThalesValentim to return the absolute path of the image in IOS, with a semi-unique filename.  Usage remains the same.  Essentially, it has been brought inline with the android version.
+### Fork Note:  This uses some minor modifications of my own combined with the work of Tommy-Carlos Williams and ThalesValentim to return the absolute path of the image in IOS, with a semi-unique filename.  Usage remains the same.  Essentially, it has been brought inline with the android version. It now supports latest cordova version on both android and ios.
 
 Canvas2ImagePlugin
 ============
@@ -7,6 +7,7 @@ This plugin allows you to save the contents of an HTML canvas tag to the iOS Pho
 On Android platforms you can change the format of the saved files (png/jpg) and define the folder where to save the pictures .
 
 See an example project using it here: [https://github.com/devgeeks/Canvas2ImageDemo](https://github.com/devgeeks/Canvas2ImageDemo) - note: this app does not work in wp8.
+
 
 Installation
 ------------
