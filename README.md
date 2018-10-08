@@ -8,6 +8,7 @@ On Android platforms you can change the format of the saved files (png/jpg) and 
 
 See an example project using it here: [https://github.com/devgeeks/Canvas2ImageDemo](https://github.com/devgeeks/Canvas2ImageDemo) - note: this app does not work in wp8.
 
+Note : now support latest cordova versions on both android and ios
 Installation
 ------------
 
