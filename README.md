@@ -6,7 +6,7 @@ On Android platforms you can change the format of the saved files (png/jpg) and 
 ## Installation
 
 ```bash
-cordova plugin add cordova-plugin-canvas2image
+cordova plugin add cordova-plugin-canvas-to-image
 ```
 
 ## Usage:

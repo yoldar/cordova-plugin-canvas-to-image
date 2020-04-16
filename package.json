@@ -1,9 +1,9 @@
 {
-  "name": "cordova-plugin-canvas2image",
+  "name": "cordova-plugin-canvas-to-image",
   "version": "0.8.0",
   "description": "cordova plugin converting canvas to image",
   "cordova": {
-    "id": "cordova-plugin-canvas2image",
+    "id": "cordova-plugin-canvas-to-image",
     "platforms": [
       "android",
       "ios",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/liuxiaoy/cordova-plugin-canvas2image.git"
+    "url": "git+https://github.com/liuxiaoy/cordova-plugin-canvas-to-image.git"
   },
   "keywords": [
     "ecosystem:cordova",
@@ -24,7 +24,7 @@
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/liuxiaoy/cordova-plugin-canvas2image/issues"
+    "url": "https://github.com/liuxiaoy/cordova-plugin-canvas-to-image/issues"
   },
-  "homepage": "https://github.com/liuxiaoy/cordova-plugin-canvas2image"
+  "homepage": "https://github.com/liuxiaoy/cordova-plugin-canvas-to-image"
 }
