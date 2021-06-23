@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 
-import org.apache.cordova.PermissionHelper;
 import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,7 +23,9 @@ import android.util.Log;
 
 public class Canvas2ImagePlugin extends CordovaPlugin {
     public static final String ACTION = "saveImageDataToLibrary";
-    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int REQ_CODE = 9000;
+    private static final String STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
     private JSONArray requestArgs;
     private CallbackContext callbackContext;
 
@@ -56,9 +57,7 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
         if (bmp == null) {
             callbackContext.error("The image could not be decoded");
         } else {
-            if (!hasPermisssion()) {
-                requestPermissions(0);
-            } else {
+            if(cordova.hasPermission(STORAGE)) {
                 File imageFile = savePhoto(bmp, filename, quality, picfolder);
                 if (imageFile == null)
                     callbackContext.error("Error while saving image");
@@ -68,39 +67,22 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
                 Log.i("Canvas2ImagePlugin", "imageFile.toString(): " + imageFile.toString());
 
                 callbackContext.success(imageFile.toString());
+            } else {
+                cordova.requestPermission(this, REQ_CODE, STORAGE);
             }
         }
         return true;
     }
 
-    public boolean hasPermisssion() {
-        for (String p : permissions) {
-            if (!PermissionHelper.hasPermission(this, p)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public void requestPermissions(int requestCode) {
-        PermissionHelper.requestPermissions(this, requestCode, permissions);
-    }
-
-    public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException {
-        PluginResult result;
-        for (int r : grantResults) {
-            if (r == PackageManager.PERMISSION_DENIED) {
-                result = new PluginResult(PluginResult.Status.ILLEGAL_ACCESS_EXCEPTION);
-                this.callbackContext.sendPluginResult(result);
+    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+        for(int r:grantResults) {
+            if(r == PackageManager.PERMISSION_DENIED) {
+                this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "No permission"));
                 return;
             }
         }
-
-        switch (requestCode) {
-            case 0:
-                save(this.requestArgs);
-                break;
+        if (requestCode == REQ_CODE) {
+            save(this.requestArgs);
         }
     }
 
