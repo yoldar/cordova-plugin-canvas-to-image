@@ -6,44 +6,28 @@ import java.io.FileOutputStream;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
 
-import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
-import org.json.JSONException;
-
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
 public class Canvas2ImagePlugin extends CordovaPlugin {
     public static final String ACTION = "saveImageDataToLibrary";
-    private static final int REQ_CODE = 9000;
-    private static final String STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-
-    private JSONArray requestArgs;
-    private CallbackContext callbackContext;
 
     @Override
-    public boolean execute(String action, JSONArray args,
-                           CallbackContext callbackContext) throws JSONException {
-
-        this.callbackContext = callbackContext;
-        this.requestArgs = args;
-
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext){
         if (action.equals(ACTION)) {
-            return save(args);
+            return save(args, callbackContext);
         } else {
             return false;
         }
     }
 
-    private Boolean save(JSONArray args) {
+    private Boolean save(JSONArray args, CallbackContext callbackContext) {
         String base64 = args.optString(0);
         String filename = args.optString(1);
         String quality = args.optString(2);
@@ -57,33 +41,17 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
         if (bmp == null) {
             callbackContext.error("The image could not be decoded");
         } else {
-            if(cordova.hasPermission(STORAGE)) {
-                File imageFile = savePhoto(bmp, filename, quality, picfolder);
-                if (imageFile == null)
-                    callbackContext.error("Error while saving image");
+            File imageFile = savePhoto(bmp, filename, quality, picfolder);
+            if (imageFile == null)
+                callbackContext.error("Error while saving image");
 
-                if (add2Galery) scanPhoto(imageFile);
+            if (add2Galery) scanPhoto(imageFile);
 
-                Log.i("Canvas2ImagePlugin", "imageFile.toString(): " + imageFile.toString());
+            Log.i("Canvas2ImagePlugin", "imageFile.toString(): " + imageFile.toString());
 
-                callbackContext.success(imageFile.toString());
-            } else {
-                cordova.requestPermission(this, REQ_CODE, STORAGE);
-            }
+            callbackContext.success(imageFile.toString());
         }
         return true;
-    }
-
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
-        for(int r:grantResults) {
-            if(r == PackageManager.PERMISSION_DENIED) {
-                this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "No permission"));
-                return;
-            }
-        }
-        if (requestCode == REQ_CODE) {
-            save(this.requestArgs);
-        }
     }
 
     private int getQuality(String strQuality) {
@@ -102,7 +70,7 @@ public class Canvas2ImagePlugin extends CordovaPlugin {
         File retVal = null;
 
         try {
-            File folder = new File(Environment.getExternalStorageDirectory(), picfolder);
+            File folder = new File(cordova.getActivity().getApplicationContext().getExternalFilesDir(null), picfolder);
             if (!folder.exists()) {
                 folder.mkdirs();
             }
